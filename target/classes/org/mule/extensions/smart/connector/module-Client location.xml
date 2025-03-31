@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module
+	name="Client location Smart Connector"
+	prefix="module-client-location"
+	doc:description="This module relies in runtime provided components"
+
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/module"
+	xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:tns="http://www.mulesoft.org/schema/mule/module-client-location"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+           http://www.mulesoft.org/schema/mule/module http://www.mulesoft.org/schema/mule/module/current/mule-module.xsd
+           http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+           http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+           http://www.mulesoft.org/schema/mule/module-client-location http://www.mulesoft.org/schema/mule/module-client-location/current/mule-module-client-location.xsd
+		   http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<operation name="get-custom-IP-details">
+		<parameters>
+			<parameter
+				name="ipAddress"
+				type="string" />
+		</parameters>
+		<body>
+			<validation:is-ip
+				ip="#[vars.ipAddress]"
+				message="Incorrect IP">
+			</validation:is-ip>
+			<http:request
+				method="GET"
+				url="https://ipapi.co/{ip}/json">
+				<http:uri-params><![CDATA[#[{"ip" : vars.ipAddress}]]]></http:uri-params>
+			</http:request>
+		</body>
+		<output
+			type="any"
+			doc:description="Payload's output" />
+	</operation>
+</module>
